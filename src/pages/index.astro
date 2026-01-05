@@ -1,19 +1,32 @@
 ---
 const title = "Your Name - Personal Brand";
-const description = "Personal branding landing page";
+const description = "Personal branding landing page - Building digital experiences that matter";
+const canonical = new URL(Astro.url.pathname, Astro.site);
 ---
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
     <meta name="description" content={description} />
-    <title>{title}</title>
-    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <meta name="author" content="Your Name" />
+    <meta name="robots" content="index, follow" />
+    <meta name="theme-color" content="#ffffff" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical.href} />
+    <meta property="og:image" content="/og-image.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <link rel="canonical" href={canonical.href} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title}</title>
 </head>
 <body>
     <style is:global>
@@ -29,7 +42,6 @@ const description = "Personal branding landing page";
             --header-bg: rgba(255, 255, 255, 0.8);
             --contact-bg: #000000;
             --contact-text: #ffffff;
-            --accent: #2563eb;
         }
 
         body.dark-mode {
@@ -46,7 +58,7 @@ const description = "Personal branding landing page";
             --contact-text: #0a0a0a;
         }
 
-        * {
+        *, *::before, *::after {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
@@ -62,7 +74,6 @@ const description = "Personal branding landing page";
             color: var(--text-primary);
             background: var(--bg-color);
             overflow-x: hidden;
-            transition: background 0.3s ease, color 0.3s ease;
         }
 
         .container {
@@ -81,7 +92,6 @@ const description = "Personal branding landing page";
             width: 100%;
             top: 0;
             z-index: 1000;
-            transition: all 0.3s ease;
         }
 
         nav {
@@ -126,6 +136,8 @@ const description = "Personal branding landing page";
             display: flex;
             list-style: none;
             gap: 2rem;
+            margin: 0;
+            padding: 0;
         }
 
         .nav-links a {
@@ -133,7 +145,7 @@ const description = "Personal branding landing page";
             text-decoration: none;
             font-weight: 500;
             font-size: 0.9rem;
-            transition: all 0.3s;
+            transition: color 0.2s ease;
             position: relative;
         }
 
@@ -149,7 +161,7 @@ const description = "Personal branding landing page";
             width: 0;
             height: 2px;
             background: var(--primary);
-            transition: width 0.3s ease;
+            transition: width 0.2s ease;
         }
 
         .nav-links a:hover::after {
@@ -173,13 +185,18 @@ const description = "Personal branding landing page";
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: background 0.2s ease;
             font-size: 1.2rem;
+            padding: 0;
         }
 
         .icon-btn:hover {
             background: var(--bg-secondary);
-            transform: translateY(-2px);
+        }
+
+        .icon-btn:focus-visible {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
         }
 
         .lang-btn {
@@ -191,22 +208,98 @@ const description = "Personal branding landing page";
             font-size: 0.85rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: background 0.2s ease;
         }
 
         .lang-btn:hover {
             background: var(--bg-secondary);
         }
 
+        .lang-btn:focus-visible {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            width: 44px;
+            height: 44px;
+            border: none;
+            background: transparent;
+            color: var(--text-primary);
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+        }
+
+        .mobile-menu-btn:hover {
+            background: var(--bg-secondary);
+        }
+
+        .mobile-menu-btn:focus-visible {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
+
+        .mobile-menu-btn i {
+            font-size: 1.5rem;
+        }
+
+        .mobile-nav {
+            position: fixed;
+            top: 73px;
+            left: 0;
+            right: 0;
+            background: var(--header-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            transform: translateY(-100%);
+            opacity: 0;
+            visibility: hidden;
+            transition: transform 0.3s ease, opacity 0.3s ease, visibility 0.3s;
+            z-index: 999;
+        }
+
+        .mobile-nav.active {
+            transform: translateY(0);
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-nav ul {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            margin: 0;
+            padding: 0;
+        }
+
+        .mobile-nav a {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 500;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            transition: background 0.2s ease;
+        }
+
+        .mobile-nav a:hover {
+            background: var(--bg-secondary);
+        }
+
         section {
-            padding: 8rem 0;
+            padding: 6rem 0;
         }
 
         .hero {
             min-height: 100vh;
             display: flex;
             align-items: center;
-            padding-top: 100px;
+            padding-top: 80px;
             position: relative;
             overflow: hidden;
             background: var(--bg-color);
@@ -220,6 +313,7 @@ const description = "Personal branding landing page";
             height: 100%;
             overflow: hidden;
             z-index: 0;
+            will-change: transform;
         }
 
         .hero-line {
@@ -227,31 +321,32 @@ const description = "Personal branding landing page";
             width: 200%;
             height: 2px;
             background: linear-gradient(90deg, transparent, var(--border-color), transparent);
-            animation: moveLine 8s linear infinite;
-            opacity: 0.5;
+            animation: moveLine 10s linear infinite;
+            opacity: 0.3;
+            will-change: transform;
         }
 
         .hero-line:nth-child(1) {
             top: 20%;
-            animation-duration: 10s;
+            animation-duration: 15s;
         }
 
         .hero-line:nth-child(2) {
             top: 40%;
-            animation-duration: 12s;
-            animation-delay: -3s;
+            animation-duration: 20s;
+            animation-delay: -5s;
         }
 
         .hero-line:nth-child(3) {
             top: 60%;
-            animation-duration: 14s;
-            animation-delay: -6s;
+            animation-duration: 18s;
+            animation-delay: -10s;
         }
 
         .hero-line:nth-child(4) {
             top: 80%;
-            animation-duration: 11s;
-            animation-delay: -2s;
+            animation-duration: 22s;
+            animation-delay: -3s;
         }
 
         @keyframes moveLine {
@@ -263,32 +358,9 @@ const description = "Personal branding landing page";
             }
         }
 
-        .hero-grid {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                linear-gradient(var(--border-color) 1px, transparent 1px),
-                linear-gradient(90deg, var(--border-color) 1px, transparent 1px);
-            background-size: 50px 50px;
-            opacity: 0.3;
-            animation: gridMove 20s linear infinite;
-        }
-
-        @keyframes gridMove {
-            0% {
-                transform: translateY(0);
-            }
-            100% {
-                transform: translateY(50px);
-            }
-        }
-
         .hero-content {
             max-width: 800px;
-            animation: fadeInUp 1s ease;
+            animation: fadeInUp 0.8s ease;
             position: relative;
             z-index: 1;
         }
@@ -296,7 +368,7 @@ const description = "Personal branding landing page";
         @keyframes fadeInUp {
             from {
                 opacity: 0;
-                transform: translateY(30px);
+                transform: translateY(20px);
             }
             to {
                 opacity: 1;
@@ -319,7 +391,7 @@ const description = "Personal branding landing page";
         }
 
         .hero h1 {
-            font-size: 4rem;
+            font-size: clamp(2.5rem, 5vw, 4rem);
             font-weight: 800;
             letter-spacing: -0.03em;
             line-height: 1.1;
@@ -328,7 +400,7 @@ const description = "Personal branding landing page";
         }
 
         .hero p {
-            font-size: 1.25rem;
+            font-size: clamp(1rem, 2vw, 1.25rem);
             color: var(--text-secondary);
             margin-bottom: 2rem;
             line-height: 1.7;
@@ -350,21 +422,20 @@ const description = "Personal branding landing page";
             border-radius: 12px;
             font-weight: 600;
             font-size: 0.95rem;
-            transition: all 0.3s ease;
+            transition: background 0.2s ease, transform 0.2s ease;
             cursor: pointer;
             border: none;
+            font-family: inherit;
         }
 
         .btn-primary {
             background: var(--primary);
             color: var(--bg-color);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
 
         .btn-primary:hover {
             background: var(--primary-hover);
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
         }
 
         .btn-secondary {
@@ -376,6 +447,11 @@ const description = "Personal branding landing page";
         .btn-secondary:hover {
             background: var(--bg-secondary);
             transform: translateY(-2px);
+        }
+
+        .btn:focus-visible {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
         }
 
         .section-header {
@@ -398,7 +474,7 @@ const description = "Personal branding landing page";
         }
 
         .section-header h2 {
-            font-size: 2.5rem;
+            font-size: clamp(2rem, 4vw, 2.5rem);
             font-weight: 700;
             letter-spacing: -0.02em;
             margin-bottom: 1rem;
@@ -429,22 +505,11 @@ const description = "Personal branding landing page";
 
         .about-image img {
             width: 100%;
+            height: auto;
             max-width: 450px;
             border-radius: 20px;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
-        }
-
-        .about-image::before {
-            content: '';
-            position: absolute;
-            top: -20px;
-            left: -20px;
-            width: 100%;
-            height: 100%;
-            background: var(--primary);
-            border-radius: 20px;
-            z-index: -1;
-            opacity: 0.1;
+            aspect-ratio: 1 / 1;
         }
 
         .about-content h3 {
@@ -477,22 +542,17 @@ const description = "Personal branding landing page";
             border-radius: 20px;
             padding: 2rem;
             border: 1px solid var(--border-color);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: transform 0.2s ease;
             position: relative;
             overflow: hidden;
         }
 
         .bento-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.1);
+            transform: translateY(-4px);
         }
 
         .bento-card.large {
             grid-column: span 2;
-        }
-
-        .bento-card.tall {
-            grid-row: span 2;
         }
 
         .bento-icon {
@@ -504,8 +564,6 @@ const description = "Personal branding landing page";
             align-items: center;
             justify-content: center;
             margin-bottom: 1.5rem;
-            position: relative;
-            z-index: 1;
             border: 1px solid var(--border-color);
         }
 
@@ -519,8 +577,6 @@ const description = "Personal branding landing page";
             font-weight: 600;
             margin-bottom: 0.75rem;
             letter-spacing: -0.01em;
-            position: relative;
-            z-index: 1;
             color: var(--text-primary);
         }
 
@@ -528,8 +584,6 @@ const description = "Personal branding landing page";
             color: var(--text-secondary);
             font-size: 0.95rem;
             line-height: 1.6;
-            position: relative;
-            z-index: 1;
         }
 
         .contact {
@@ -538,31 +592,6 @@ const description = "Personal branding landing page";
             text-align: center;
             position: relative;
             overflow: hidden;
-        }
-
-        .contact::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.03) 0%, transparent 60%);
-            animation: rotate 20s linear infinite;
-        }
-
-        @keyframes rotate {
-            from {
-                transform: rotate(0deg);
-            }
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        .contact .section-header {
-            position: relative;
-            z-index: 1;
         }
 
         .contact .section-header h2,
@@ -582,8 +611,6 @@ const description = "Personal branding landing page";
             gap: 1.5rem;
             flex-wrap: wrap;
             margin-top: 3rem;
-            position: relative;
-            z-index: 1;
         }
 
         .contact-link {
@@ -598,14 +625,13 @@ const description = "Personal branding landing page";
             text-decoration: none;
             border-radius: 14px;
             font-weight: 500;
-            transition: all 0.3s ease;
+            transition: background 0.2s ease, transform 0.2s ease;
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .contact-link:hover {
             background: rgba(255, 255, 255, 0.2);
-            transform: translateY(-4px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transform: translateY(-2px);
         }
 
         .contact-link i {
@@ -639,11 +665,10 @@ const description = "Personal branding landing page";
             align-items: center;
             justify-content: center;
             font-size: 1.5rem;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
             opacity: 0;
             visibility: hidden;
             transform: translateY(20px);
-            transition: all 0.3s ease;
+            transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
             z-index: 999;
         }
 
@@ -656,13 +681,17 @@ const description = "Personal branding landing page";
         .scroll-top-btn:hover {
             background: var(--primary-hover);
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .scroll-top-btn:focus-visible {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
         }
 
         .fade-in {
             opacity: 0;
             transform: translateY(30px);
-            transition: opacity 0.8s ease, transform 0.8s ease;
+            transition: opacity 0.6s ease, transform 0.6s ease;
         }
 
         .fade-in.visible {
@@ -671,10 +700,6 @@ const description = "Personal branding landing page";
         }
 
         @media (max-width: 968px) {
-            .hero h1 {
-                font-size: 3rem;
-            }
-
             .about-grid {
                 grid-template-columns: 1fr;
                 gap: 3rem;
@@ -684,26 +709,22 @@ const description = "Personal branding landing page";
                 grid-template-columns: 1fr 1fr;
             }
 
-            .bento-card.large,
-            .bento-card.tall {
+            .bento-card.large {
                 grid-column: span 1;
-                grid-row: span 1;
             }
 
             .nav-center {
                 display: none;
             }
+
+            .mobile-menu-btn {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
         }
 
         @media (max-width: 640px) {
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-
-            .hero p {
-                font-size: 1rem;
-            }
-
             .bento-grid {
                 grid-template-columns: 1fr;
             }
@@ -717,8 +738,13 @@ const description = "Personal branding landing page";
                 height: 36px;
             }
 
+            .mobile-menu-btn {
+                width: 40px;
+                height: 40px;
+            }
+
             section {
-                padding: 5rem 0;
+                padding: 4rem 0;
             }
 
             .scroll-top-btn {
@@ -729,16 +755,28 @@ const description = "Personal branding landing page";
                 font-size: 1.3rem;
             }
         }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+
+            html {
+                scroll-behavior: auto;
+            }
+        }
     </style>
 
-    <header>
+    <header role="banner">
         <div class="container">
-            <nav>
-                <a href="#" class="logo">
-                    <div class="logo-icon">
+            <nav role="navigation" aria-label="Main navigation">
+                <a href="#" class="logo" aria-label="Your Brand Home">
+                    <div class="logo-icon" aria-hidden="true">
                         <i class="ph ph-lightning"></i>
                     </div>
-                    Your Brand
+                    <span>Your Brand</span>
                 </a>
                 <div class="nav-center">
                     <ul class="nav-links">
@@ -748,182 +786,200 @@ const description = "Personal branding landing page";
                     </ul>
                 </div>
                 <div class="nav-actions">
-                    <button class="lang-btn" id="langToggle">ID</button>
-                    <button class="icon-btn" id="darkModeToggle">
+                    <button class="lang-btn" id="langToggle" aria-label="Toggle language">ID</button>
+                    <button class="icon-btn" id="darkModeToggle" aria-label="Toggle dark mode">
                         <i class="ph ph-moon"></i>
+                    </button>
+                    <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Open menu" aria-expanded="false">
+                        <i class="ph ph-list"></i>
                     </button>
                 </div>
             </nav>
         </div>
     </header>
 
-    <section class="hero">
-        <div class="hero-bg">
-            <div class="hero-grid"></div>
-            <div class="hero-line"></div>
-            <div class="hero-line"></div>
-            <div class="hero-line"></div>
-            <div class="hero-line"></div>
-        </div>
+    <nav class="mobile-nav" id="mobileNav" aria-label="Mobile navigation">
         <div class="container">
-            <div class="hero-content">
-                <div class="hero-badge">
-                    <i class="ph ph-sparkle"></i>
-                    <span data-en="Available for new projects" data-id="Tersedia untuk proyek baru">Available for new projects</span>
-                </div>
-                <h1 data-en="Building digital experiences that matter" data-id="Membangun pengalaman digital yang bermakna">Building digital experiences that matter</h1>
-                <p data-en="I'm a creative professional dedicated to crafting impactful solutions that drive real results. Let's create something amazing together." data-id="Saya seorang profesional kreatif yang berdedikasi untuk menciptakan solusi berdampak yang menghasilkan hasil nyata. Mari ciptakan sesuatu yang luar biasa bersama.">I'm a creative professional dedicated to crafting impactful solutions that drive real results. Let's create something amazing together.</p>
-                <div class="hero-buttons">
-                    <a href="#contact" class="btn btn-primary">
-                        <i class="ph ph-envelope-simple"></i>
-                        <span data-en="Get in Touch" data-id="Hubungi Saya">Get in Touch</span>
-                    </a>
-                    <a href="#about" class="btn btn-secondary">
-                        <i class="ph ph-user"></i>
-                        <span data-en="Learn More" data-id="Pelajari Lebih Lanjut">Learn More</span>
-                    </a>
-                </div>
-            </div>
+            <ul>
+                <li><a href="#about" data-en="About" data-id="Tentang">About</a></li>
+                <li><a href="#skills" data-en="Services" data-id="Layanan">Services</a></li>
+                <li><a href="#contact" data-en="Contact" data-id="Kontak">Contact</a></li>
+            </ul>
         </div>
-    </section>
+    </nav>
 
-    <section class="about" id="about">
-        <div class="container">
-            <div class="section-header fade-in">
-                <div class="section-badge">
-                    <i class="ph ph-info"></i>
-                    <span data-en="About Me" data-id="Tentang Saya">About Me</span>
-                </div>
-                <h2 data-en="Passionate about creating impact" data-id="Bergairah dalam menciptakan dampak">Passionate about creating impact</h2>
-                <p data-en="Combining creativity with strategic thinking to deliver exceptional results" data-id="Menggabungkan kreativitas dengan pemikiran strategis untuk memberikan hasil luar biasa">Combining creativity with strategic thinking to deliver exceptional results</p>
+    <main>
+        <section class="hero" aria-label="Hero section">
+            <div class="hero-bg" aria-hidden="true">
+                <div class="hero-line"></div>
+                <div class="hero-line"></div>
+                <div class="hero-line"></div>
+                <div class="hero-line"></div>
             </div>
-            <div class="about-grid">
-                <div class="about-image fade-in">
-                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&h=500&fit=crop&crop=face" alt="Your Name" />
-                </div>
-                <div class="about-content fade-in">
-                    <h3 data-en="Hi, I'm Your Name" data-id="Halo, saya Nama Anda">Hi, I'm Your Name</h3>
-                    <p data-en="I'm a passionate professional dedicated to delivering exceptional results. With years of experience in my field, I specialize in creating impactful solutions that drive real results." data-id="Saya seorang profesional yang berdedikasi untuk memberikan hasil luar biasa. Dengan pengalaman bertahun-tahun di bidang saya, saya berspesialisasi dalam menciptakan solusi berdampak yang menghasilkan hasil nyata.">I'm a passionate professional dedicated to delivering exceptional results. With years of experience in my field, I specialize in creating impactful solutions that drive real results.</p>
-                    <p data-en="My approach combines creativity with strategic thinking, ensuring every project I work on is both innovative and effective. I believe in building lasting relationships and delivering value beyond expectations." data-id="Pendekatan saya menggabungkan kreativitas dengan pemikiran strategis, memastikan setiap proyek yang saya kerjakan inovatif dan efektif. Saya percaya dalam membangun hubungan jangka panjang dan memberikan nilai melampaui ekspektasi.">My approach combines creativity with strategic thinking, ensuring every project I work on is both innovative and effective. I believe in building lasting relationships and delivering value beyond expectations.</p>
-                    <p data-en="When I'm not working, you can find me exploring new technologies, reading, or spending time outdoors—activities that keep my creativity flowing." data-id="Ketika saya tidak bekerja, Anda bisa menemukan saya mengeksplor teknologi baru, membaca, atau menghabiskan waktu di luar ruangan—aktivitas yang membuat kreativitas saya mengalir.">When I'm not working, you can find me exploring new technologies, reading, or spending time outdoors—activities that keep my creativity flowing.</p>
-                    <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+            <div class="container">
+                <div class="hero-content">
+                    <div class="hero-badge">
+                        <i class="ph ph-sparkle" aria-hidden="true"></i>
+                        <span data-en="Available for new projects" data-id="Tersedia untuk proyek baru">Available for new projects</span>
+                    </div>
+                    <h1 data-en="Building digital experiences that matter" data-id="Membangun pengalaman digital yang bermakna">Building digital experiences that matter</h1>
+                    <p data-en="I'm a creative professional dedicated to crafting impactful solutions that drive real results. Let's create something amazing together." data-id="Saya seorang profesional kreatif yang berdedikasi untuk menciptakan solusi berdampak yang menghasilkan hasil nyata. Mari ciptakan sesuatu yang luar biasa bersama.">I'm a creative professional dedicated to crafting impactful solutions that drive real results. Let's create something amazing together.</p>
+                    <div class="hero-buttons">
                         <a href="#contact" class="btn btn-primary">
-                            <i class="ph ph-chat-circle-text"></i>
-                            <span data-en="Let's Talk" data-id="Mari Berbicara">Let's Talk</span>
+                            <i class="ph ph-envelope-simple" aria-hidden="true"></i>
+                            <span data-en="Get in Touch" data-id="Hubungi Saya">Get in Touch</span>
+                        </a>
+                        <a href="#about" class="btn btn-secondary">
+                            <i class="ph ph-user" aria-hidden="true"></i>
+                            <span data-en="Learn More" data-id="Pelajari Lebih Lanjut">Learn More</span>
                         </a>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <section class="skills" id="skills">
-        <div class="container">
-            <div class="section-header fade-in">
-                <div class="section-badge">
-                    <i class="ph ph-lightning"></i>
-                    <span data-en="Services" data-id="Layanan">Services</span>
-                </div>
-                <h2 data-en="What I bring to the table" data-id="Yang saya tawarkan">What I bring to the table</h2>
-                <p data-en="A comprehensive set of skills to help you achieve your goals" data-id="Serangkaian keterampilan lengkap untuk membantu Anda mencapai tujuan Anda">A comprehensive set of skills to help you achieve your goals</p>
-            </div>
-            <div class="bento-grid">
-                <div class="bento-card large fade-in">
-                    <div class="bento-icon">
-                        <i class="ph ph-lightbulb"></i>
+        <section class="about" id="about" aria-labelledby="about-heading">
+            <div class="container">
+                <div class="section-header fade-in">
+                    <div class="section-badge">
+                        <i class="ph ph-info" aria-hidden="true"></i>
+                        <span data-en="About Me" data-id="Tentang Saya">About Me</span>
                     </div>
-                    <h3 data-en="Strategy & Planning" data-id="Strategi & Perencanaan">Strategy & Planning</h3>
-                    <p data-en="Developing comprehensive strategies that align with your goals and deliver measurable results. From concept to execution, I ensure every step is purposeful and effective." data-id="Mengembangkan strategi komprehensif yang selaras dengan tujuan Anda dan memberikan hasil terukur. Dari konsep hingga eksekusi, saya memastikan setiap langkah bermakna dan efektif.">Developing comprehensive strategies that align with your goals and deliver measurable results. From concept to execution, I ensure every step is purposeful and effective.</p>
+                    <h2 id="about-heading" data-en="Passionate about creating impact" data-id="Bergairah dalam menciptakan dampak">Passionate about creating impact</h2>
+                    <p data-en="Combining creativity with strategic thinking to deliver exceptional results" data-id="Menggabungkan kreativitas dengan pemikiran strategis untuk memberikan hasil luar biasa">Combining creativity with strategic thinking to deliver exceptional results</p>
                 </div>
-                <div class="bento-card fade-in">
-                    <div class="bento-icon">
-                        <i class="ph ph-paint-brush"></i>
+                <div class="about-grid">
+                    <div class="about-image fade-in">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=450&h=450&fit=crop&crop=face&q=80" alt="Professional headshot" width="450" height="450" loading="lazy" fetchpriority="low" />
                     </div>
-                    <h3 data-en="Design" data-id="Desain">Design</h3>
-                    <p data-en="Creating visually stunning designs that communicate your message effectively and resonate with your audience." data-id="Menciptakan desain yang memukau secara visual yang mengkomunikasikan pesan Anda secara efektif dan beresonansi dengan audiens Anda.">Creating visually stunning designs that communicate your message effectively and resonate with your audience.</p>
-                </div>
-                <div class="bento-card fade-in">
-                    <div class="bento-icon">
-                        <i class="ph ph-code"></i>
+                    <div class="about-content fade-in">
+                        <h3 data-en="Hi, I'm Your Name" data-id="Halo, saya Nama Anda">Hi, I'm Your Name</h3>
+                        <p data-en="I'm a passionate professional dedicated to delivering exceptional results. With years of experience in my field, I specialize in creating impactful solutions that drive real results." data-id="Saya seorang profesional yang berdedikasi untuk memberikan hasil luar biasa. Dengan pengalaman bertahun-tahun di bidang saya, saya berspesialisasi dalam menciptakan solusi berdampak yang menghasilkan hasil nyata.">I'm a passionate professional dedicated to delivering exceptional results. With years of experience in my field, I specialize in creating impactful solutions that drive real results.</p>
+                        <p data-en="My approach combines creativity with strategic thinking, ensuring every project I work on is both innovative and effective. I believe in building lasting relationships and delivering value beyond expectations." data-id="Pendekatan saya menggabungkan kreativitas dengan pemikiran strategis, memastikan setiap proyek yang saya kerjakan inovatif dan efektif. Saya percaya dalam membangun hubungan jangka panjang dan memberikan nilai melampaui ekspektasi.">My approach combines creativity with strategic thinking, ensuring every project I work on is both innovative and effective. I believe in building lasting relationships and delivering value beyond expectations.</p>
+                        <p data-en="When I'm not working, you can find me exploring new technologies, reading, or spending time outdoors—activities that keep my creativity flowing." data-id="Ketika saya tidak bekerja, Anda bisa menemukan saya mengeksplor teknologi baru, membaca, atau menghabiskan waktu di luar ruangan—aktivitas yang membuat kreativitas saya mengalir.">When I'm not working, you can find me exploring new technologies, reading, or spending time outdoors—activities that keep my creativity flowing.</p>
+                        <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                            <a href="#contact" class="btn btn-primary">
+                                <i class="ph ph-chat-circle-text" aria-hidden="true"></i>
+                                <span data-en="Let's Talk" data-id="Mari Berbicara">Let's Talk</span>
+                            </a>
+                        </div>
                     </div>
-                    <h3 data-en="Development" data-id="Pengembangan">Development</h3>
-                    <p data-en="Building robust solutions using latest technologies and best practices for optimal performance." data-id="Membangun solusi yang kuat menggunakan teknologi terbaru dan praktik terbaik untuk performa optimal.">Building robust solutions using latest technologies and best practices for optimal performance.</p>
-                </div>
-                <div class="bento-card large fade-in">
-                    <div class="bento-icon">
-                        <i class="ph ph-chart-line-up"></i>
-                    </div>
-                    <h3 data-en="Data Analysis" data-id="Analisis Data">Data Analysis</h3>
-                    <p data-en="Analyzing data to gain insights and make informed decisions that drive success. Transforming complex data into actionable strategies." data-id="Menganalisis data untuk mendapatkan wawasan dan membuat keputusan terinformasi yang mendorong kesuksesan. Mengubah data kompleks menjadi strategi yang dapat ditindaklanjuti.">Analyzing data to gain insights and make informed decisions that drive success. Transforming complex data into actionable strategies.</p>
-                </div>
-                <div class="bento-card fade-in">
-                    <div class="bento-icon">
-                        <i class="ph ph-rocket"></i>
-                    </div>
-                    <h3 data-en="Growth" data-id="Pertumbuhan">Growth</h3>
-                    <p data-en="Scaling your business with proven strategies that deliver sustainable growth and long-term success." data-id="Menskalakan bisnis Anda dengan strategi terbukti yang memberikan pertumbuhan berkelanjutan dan kesuksesan jangka panjang.">Scaling your business with proven strategies that deliver sustainable growth and long-term success.</p>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <section class="contact" id="contact">
-        <div class="container">
-            <div class="section-header">
-                <div class="section-badge">
-                    <i class="ph ph-paper-plane-tilt"></i>
-                    <span data-en="Contact" data-id="Kontak">Contact</span>
+        <section class="skills" id="skills" aria-labelledby="skills-heading">
+            <div class="container">
+                <div class="section-header fade-in">
+                    <div class="section-badge">
+                        <i class="ph ph-lightning" aria-hidden="true"></i>
+                        <span data-en="Services" data-id="Layanan">Services</span>
+                    </div>
+                    <h2 id="skills-heading" data-en="What I bring to the table" data-id="Yang saya tawarkan">What I bring to the table</h2>
+                    <p data-en="A comprehensive set of skills to help you achieve your goals" data-id="Serangkaian keterampilan lengkap untuk membantu Anda mencapai tujuan Anda">A comprehensive set of skills to help you achieve your goals</p>
                 </div>
-                <h2 data-en="Let's create something amazing" data-id="Mari ciptakan sesuatu yang luar biasa">Let's create something amazing</h2>
-                <p data-en="I'm always open to discussing new projects, creative ideas, or opportunities" data-id="Saya selalu terbuka untuk mendiskusikan proyek baru, ide kreatif, atau peluang">I'm always open to discussing new projects, creative ideas, or opportunities</p>
+                <div class="bento-grid">
+                    <article class="bento-card large fade-in">
+                        <div class="bento-icon">
+                            <i class="ph ph-lightbulb" aria-hidden="true"></i>
+                        </div>
+                        <h3 data-en="Strategy & Planning" data-id="Strategi & Perencanaan">Strategy & Planning</h3>
+                        <p data-en="Developing comprehensive strategies that align with your goals and deliver measurable results. From concept to execution, I ensure every step is purposeful and effective." data-id="Mengembangkan strategi komprehensif yang selaras dengan tujuan Anda dan memberikan hasil terukur. Dari konsep hingga eksekusi, saya memastikan setiap langkah bermakna dan efektif.">Developing comprehensive strategies that align with your goals and deliver measurable results. From concept to execution, I ensure every step is purposeful and effective.</p>
+                    </article>
+                    <article class="bento-card fade-in">
+                        <div class="bento-icon">
+                            <i class="ph ph-paint-brush" aria-hidden="true"></i>
+                        </div>
+                        <h3 data-en="Design" data-id="Desain">Design</h3>
+                        <p data-en="Creating visually stunning designs that communicate your message effectively and resonate with your audience." data-id="Menciptakan desain yang memukau secara visual yang mengkomunikasikan pesan Anda secara efektif dan beresonansi dengan audiens Anda.">Creating visually stunning designs that communicate your message effectively and resonate with your audience.</p>
+                    </article>
+                    <article class="bento-card fade-in">
+                        <div class="bento-icon">
+                            <i class="ph ph-code" aria-hidden="true"></i>
+                        </div>
+                        <h3 data-en="Development" data-id="Pengembangan">Development</h3>
+                        <p data-en="Building robust solutions using latest technologies and best practices for optimal performance." data-id="Membangun solusi yang kuat menggunakan teknologi terbaru dan praktik terbaik untuk performa optimal.">Building robust solutions using latest technologies and best practices for optimal performance.</p>
+                    </article>
+                    <article class="bento-card large fade-in">
+                        <div class="bento-icon">
+                            <i class="ph ph-chart-line-up" aria-hidden="true"></i>
+                        </div>
+                        <h3 data-en="Data Analysis" data-id="Analisis Data">Data Analysis</h3>
+                        <p data-en="Analyzing data to gain insights and make informed decisions that drive success. Transforming complex data into actionable strategies." data-id="Menganalisis data untuk mendapatkan wawasan dan membuat keputusan terinformasi yang mendorong kesuksesan. Mengubah data kompleks menjadi strategi yang dapat ditindaklanjuti.">Analyzing data to gain insights and make informed decisions that drive success. Transforming complex data into actionable strategies.</p>
+                    </article>
+                    <article class="bento-card fade-in">
+                        <div class="bento-icon">
+                            <i class="ph ph-rocket" aria-hidden="true"></i>
+                        </div>
+                        <h3 data-en="Growth" data-id="Pertumbuhan">Growth</h3>
+                        <p data-en="Scaling your business with proven strategies that deliver sustainable growth and long-term success." data-id="Menskalakan bisnis Anda dengan strategi terbukti yang memberikan pertumbuhan berkelanjutan dan kesuksesan jangka panjang.">Scaling your business with proven strategies that deliver sustainable growth and long-term success.</p>
+                    </article>
+                </div>
             </div>
-            <div class="contact-links">
-                <a href="mailto:your.email@example.com" class="contact-link">
-                    <i class="ph ph-envelope-simple"></i>
-                    <span data-en="Email Me" data-id="Email Saya">Email Me</span>
-                </a>
-                <a href="https://linkedin.com/in/yourprofile" class="contact-link">
-                    <i class="ph ph-linkedin-logo"></i>
-                    LinkedIn
-                </a>
-                <a href="https://twitter.com/yourhandle" class="contact-link">
-                    <i class="ph ph-twitter-logo"></i>
-                    Twitter
-                </a>
-                <a href="https://github.com/yourusername" class="contact-link">
-                    <i class="ph ph-github-logo"></i>
-                    GitHub
-                </a>
-            </div>
-        </div>
-    </section>
+        </section>
 
-    <footer>
+        <section class="contact" id="contact" aria-labelledby="contact-heading">
+            <div class="container">
+                <div class="section-header">
+                    <div class="section-badge">
+                        <i class="ph ph-paper-plane-tilt" aria-hidden="true"></i>
+                        <span data-en="Contact" data-id="Kontak">Contact</span>
+                    </div>
+                    <h2 id="contact-heading" data-en="Let's create something amazing" data-id="Mari ciptakan sesuatu yang luar biasa">Let's create something amazing</h2>
+                    <p data-en="I'm always open to discussing new projects, creative ideas, or opportunities" data-id="Saya selalu terbuka untuk mendiskusikan proyek baru, ide kreatif, atau peluang">I'm always open to discussing new projects, creative ideas, or opportunities</p>
+                </div>
+                <div class="contact-links">
+                    <a href="mailto:your.email@example.com" class="contact-link" aria-label="Send email">
+                        <i class="ph ph-envelope-simple" aria-hidden="true"></i>
+                        <span data-en="Email Me" data-id="Email Saya">Email Me</span>
+                    </a>
+                    <a href="https://linkedin.com/in/yourprofile" class="contact-link" target="_blank" rel="noopener noreferrer" aria-label="Visit LinkedIn profile">
+                        <i class="ph ph-linkedin-logo" aria-hidden="true"></i>
+                        <span>LinkedIn</span>
+                    </a>
+                    <a href="https://twitter.com/yourhandle" class="contact-link" target="_blank" rel="noopener noreferrer" aria-label="Visit Twitter profile">
+                        <i class="ph ph-twitter-logo" aria-hidden="true"></i>
+                        <span>Twitter</span>
+                    </a>
+                    <a href="https://github.com/yourusername" class="contact-link" target="_blank" rel="noopener noreferrer" aria-label="Visit GitHub profile">
+                        <i class="ph ph-github-logo" aria-hidden="true"></i>
+                        <span>GitHub</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer role="contentinfo">
         <div class="container">
             <p data-en="&copy; 2024 Your Name. Crafted with passion." data-id="&copy; 2024 Nama Anda. Dibuat dengan penuh semangat.">&copy; 2024 Your Name. Crafted with passion.</p>
         </div>
     </footer>
 
     <button id="scrollTopBtn" class="scroll-top-btn" aria-label="Scroll to top">
-        <i class="ph ph-arrow-up"></i>
+        <i class="ph ph-arrow-up" aria-hidden="true"></i>
     </button>
 
     <script is:inline>
         document.addEventListener('DOMContentLoaded', function() {
             const fadeElements = document.querySelectorAll('.fade-in');
 
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('visible');
-                    }
+            if ('IntersectionObserver' in window) {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('visible');
+                        }
+                    });
+                }, {
+                    threshold: 0.1,
+                    rootMargin: '0px 0px -50px 0px'
                 });
-            }, {
-                threshold: 0.1,
-                rootMargin: '0px 0px -50px 0px'
-            });
 
-            fadeElements.forEach(el => observer.observe(el));
+                fadeElements.forEach(el => observer.observe(el));
+            } else {
+                fadeElements.forEach(el => el.classList.add('visible'));
+            }
 
             document.querySelectorAll('a[href^="#"]').forEach(anchor => {
                 anchor.addEventListener('click', function(e) {
@@ -934,6 +990,10 @@ const description = "Personal branding landing page";
                             behavior: 'smooth',
                             block: 'start'
                         });
+                        const mobileNav = document.getElementById('mobileNav');
+                        if (mobileNav && mobileNav.classList.contains('active')) {
+                            toggleMobileMenu();
+                        }
                     }
                 });
             });
@@ -986,7 +1046,7 @@ const description = "Personal branding landing page";
                 } else {
                     scrollTopBtn.classList.remove('visible');
                 }
-            });
+            }, { passive: true });
 
             scrollTopBtn.addEventListener('click', () => {
                 window.scrollTo({
@@ -994,7 +1054,35 @@ const description = "Personal branding landing page";
                     behavior: 'smooth'
                 });
             });
+
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const mobileNav = document.getElementById('mobileNav');
+
+            function toggleMobileMenu() {
+                const isActive = mobileNav.classList.contains('active');
+                mobileNav.classList.toggle('active');
+                mobileMenuBtn.setAttribute('aria-expanded', !isActive);
+                const icon = mobileMenuBtn.querySelector('i');
+                icon.className = isActive ? 'ph ph-list' : 'ph ph-x';
+            }
+
+            mobileMenuBtn.addEventListener('click', toggleMobileMenu);
+
+            mobileNav.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    if (mobileNav.classList.contains('active')) {
+                        toggleMobileMenu();
+                    }
+                });
+            });
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && mobileNav.classList.contains('active')) {
+                    toggleMobileMenu();
+                }
+            });
         });
     </script>
+    <script src="https://unpkg.com/@phosphor-icons/web" defer></script>
 </body>
 </html>
